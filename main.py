@@ -18,7 +18,7 @@ from utils.visualizer import Visualizer
 from PIL import Image
 import matplotlib
 import matplotlib.pyplot as plt
-
+import pickle
 
 def get_argparser():
     parser = argparse.ArgumentParser()
@@ -320,6 +320,13 @@ def main():
         return
 
     interval_loss = 0
+    
+    snap_shot = {
+        'Class IoU':[],
+        'Mean IoU':[],
+        'Overall Acc': []
+    }
+
     while True:  # cur_itrs < opts.total_itrs:
         # =====  Train  =====
         model.train()
@@ -341,13 +348,13 @@ def main():
             if vis is not None:
                 vis.vis_scalar('Loss', cur_itrs, np_loss)
 
-            if (cur_itrs) % 10 == 0:
+            if (cur_itrs) % 1 == 0:
                 interval_loss = interval_loss / 10
                 print("Epoch %d, Itrs %d/%d, Loss=%f" %
                       (cur_epochs, cur_itrs, opts.total_itrs, interval_loss))
                 interval_loss = 0.0
 
-            if (cur_itrs) % opts.val_interval == 0:
+            if (cur_itrs) % 5 == 0:
                 save_ckpt('checkpoints/latest_%s_%s_os%d.pth' %
                           (opts.model, opts.dataset, opts.output_stride))
                 print("validation...")
@@ -356,10 +363,21 @@ def main():
                     opts=opts, model=model, loader=val_loader, device=device, metrics=metrics,
                     ret_samples_ids=vis_sample_id)
                 print(metrics.to_str(val_score))
+                
+                snap_shot['Class IoU'].append(val_score['Class IoU'])
+                snap_shot['Mean IoU'].append(val_score['Mean IoU'])
+                snap_shot['Overall Acc'].append(val_score['Overall Acc'])
+        
                 if val_score['Mean IoU'] > best_score:  # save best model
                     best_score = val_score['Mean IoU']
                     save_ckpt('checkpoints/best_%s_%s_os%d.pth' %
                               (opts.model, opts.dataset, opts.output_stride))
+                
+                
+
+                print("[Val] Overall Acc", cur_itrs, val_score['Overall Acc'])
+                print("[Val] Mean IoU", cur_itrs, val_score['Mean IoU'])
+                print("[Val] Class IoU", val_score['Class IoU'])
 
                 if vis is not None:  # visualize validation score and samples
                     vis.vis_scalar("[Val] Overall Acc", cur_itrs, val_score['Overall Acc'])
@@ -376,7 +394,14 @@ def main():
             scheduler.step()
 
             if cur_itrs >= opts.total_itrs:
+                print("\n\n Saving snapshot...")
+                cwd = os.getcwd()
+                file = os.path.join(cwd, 'snapshot.pickle')   
+                print(file)             
+                with open(file, 'wb') as handle:
+                    pickle.dump(snap_shot, handle, protocol=pickle.HIGHEST_PROTOCOL)
                 return
+            
 
 
 if __name__ == '__main__':

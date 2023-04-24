@@ -127,7 +127,14 @@ class Cityscapes(data.Dataset):
         return image, target
 
     def __len__(self):
-        return len(self.images)
+        
+        if self.split == 'train':
+            print("Train images length: ", len(self.images))
+            print("limiting index to 25%:", int(len(self.images)/4))
+            return int(len(self.images)/4)
+        else:
+            return len(self.images)
+        
 
     def _load_json(self, path):
         with open(path, 'r') as file:
