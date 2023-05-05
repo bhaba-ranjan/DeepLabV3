@@ -63,7 +63,7 @@ def get_argparser():
 
     parser.add_argument("--ckpt", default=None, type=str,
                         help="restore from checkpoint")
-    parser.add_argument("--continue_training", action='store_true', default=False)
+    parser.add_argument("--continue_training", action='store_true', default=True)
 
     parser.add_argument("--loss_type", type=str, default='cross_entropy',
                         choices=['cross_entropy', 'focal_loss'], help="loss type (default: False)")
