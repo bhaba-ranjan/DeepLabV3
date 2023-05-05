@@ -33,4 +33,4 @@ cd /home/bpanigr/projects/DeepLabV3Plus-Pytorch
 pip install -r requirements.txt
 
 ## Execute your script
-python main.py --model deeplabv3plus_mobilenet --dataset cityscapes --vis_port 28333 --gpu_id 0  --lr 0.1  --crop_size 768 --batch_size 4 --output_stride 16 --total_itrs 10 --data_root ./datasets/data/cityscapes
+python main.py --model deeplabv3_mobilenet --dataset cityscapes --vis_port 28333 --gpu_id 0  --lr 0.1  --crop_size 768 --batch_size 4 --output_stride 16 --total_itrs 10 --data_root ./datasets/data/cityscapes --ckpt ./checkpoints/best_deeplabv3_mobilenet_voc_os16.pth --test_only
