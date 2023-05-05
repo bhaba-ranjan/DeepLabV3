@@ -132,6 +132,10 @@ class Cityscapes(data.Dataset):
             print("Train images length: ", len(self.images))
             print("limiting index to 25%:", int(len(self.images)/4))
             return int(len(self.images)/4)
+        elif self.split == 'val':
+            print("Validation... images length: ", len(self.images))
+            print("limiting index to 25%:", int(len(self.images)/4))
+            return int(len(self.images)/4)
         else:
             return len(self.images)
         
