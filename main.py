@@ -377,7 +377,7 @@ def main():
 
                 print("[Val] Overall Acc", cur_itrs, val_score['Overall Acc'])
                 print("[Val] Mean IoU", cur_itrs, val_score['Mean IoU'])
-                print("[Val] Class IoU", val_score['Class IoU'])
+                # print("[Val] Class IoU", val_score['Class IoU'])
 
                 if vis is not None:  # visualize validation score and samples
                     vis.vis_scalar("[Val] Overall Acc", cur_itrs, val_score['Overall Acc'])
@@ -393,7 +393,6 @@ def main():
                 model.train()
             scheduler.step()
             
-            print(cur_itrs)
 
             if cur_itrs >= opts.total_itrs:
                 print("\n\n Saving snapshot...")

@@ -31,7 +31,7 @@ class StreamSegMetrics(_StreamMetrics):
         self.confusion_matrix = np.zeros((n_classes, n_classes))
 
     def update(self, label_trues, label_preds):
-        print(label_trues.shape, label_preds.shape)
+        # print(label_trues.shape, label_preds.shape)
         for lt, lp in zip(label_trues, label_preds):
             self.confusion_matrix += self._fast_hist( lt.flatten(), lp.flatten() )
     
